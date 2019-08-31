@@ -13,6 +13,7 @@
         <commons-beanutils.version>1.9.3</commons-beanutils.version>
         <junit.version>5.5.1</junit.version>
         <assertj-core.version>3.13.2</assertj-core.version>
+        <mockito.version>3.0.0</mockito.version>
         <commons-io.version>2.6</commons-io.version>
         <lombok.version>1.18.8</lombok.version>
         <java.version>11</java.version>
@@ -45,6 +46,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj-core.version}</version>
@@ -60,6 +67,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

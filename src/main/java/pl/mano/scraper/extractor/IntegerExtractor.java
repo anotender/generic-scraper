@@ -12,7 +12,21 @@ class IntegerExtractor implements Extractor<Integer> {
 
     @Override
     public Integer apply(TagNode tagNode, String xPath) {
-        return Integer.parseInt(stringExtractor.apply(tagNode, xPath));
+        String stringValue = stringExtractor.apply(tagNode, xPath);
+
+        if (stringValue == null) {
+            return null;
+        }
+
+        stringValue = stringValue
+                .trim()
+                .replaceAll("\\s+", "");
+
+        try {
+            return Integer.parseInt(stringValue);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
 }
