@@ -21,16 +21,19 @@ class StringExtractor implements Extractor<String> {
                 LOGGER.log(Level.WARNING, "No match for given XPath: " + xPath);
                 return null;
             }
-            if (!(results[0] instanceof TagNode)) {
-                LOGGER.log(Level.WARNING, "Result is not a TagNode instance");
-                return null;
+            Object result = results[0];
+            if (result instanceof TagNode) {
+                return extractTagNodeText((TagNode) result);
             }
-            TagNode firstResult = (TagNode) results[0];
-            return firstResult.getText().toString();
+            return result.toString();
         } catch (XPatherException e) {
             LOGGER.log(Level.WARNING, "Could not extract value for given XPath: " + xPath);
             return null;
         }
+    }
+
+    private String extractTagNodeText(TagNode node) {
+        return node.getText().toString();
     }
 
 }

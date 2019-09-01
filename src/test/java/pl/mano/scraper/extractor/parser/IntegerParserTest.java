@@ -36,7 +36,7 @@ class IntegerParserTest {
 
     @ParameterizedTest(name = "\"{0}\" should be {1}")
     @MethodSource("testCases")
-    void shouldReturnExpectedOutputForGivenInput(String valueAsString, Integer expectedOutput) {
+    void shouldParseStringValueToInteger(String valueAsString, Integer expectedOutput) {
         //when
         Integer result = integerParser.apply(valueAsString);
 
