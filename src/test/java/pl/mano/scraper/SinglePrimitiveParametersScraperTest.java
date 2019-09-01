@@ -14,7 +14,7 @@ class SinglePrimitiveParametersScraperTest extends ScraperTest {
     @Test
     void shouldScrapSingleStringValue() {
         //when
-        SinglePrimitiveParametersDTO singlePrimitiveParametersDTO = scraper.scrapSingleObject(document, SinglePrimitiveParametersDTO.class);
+        SinglePrimitiveParametersDTO singlePrimitiveParametersDTO = scraper.scrapObject(document, SinglePrimitiveParametersDTO.class);
 
         //then
         then(singlePrimitiveParametersDTO)
@@ -26,7 +26,7 @@ class SinglePrimitiveParametersScraperTest extends ScraperTest {
     @Test
     void shouldScrapSingleIntegerValue() {
         //when
-        SinglePrimitiveParametersDTO singlePrimitiveParametersDTO = scraper.scrapSingleObject(document, SinglePrimitiveParametersDTO.class);
+        SinglePrimitiveParametersDTO singlePrimitiveParametersDTO = scraper.scrapObject(document, SinglePrimitiveParametersDTO.class);
 
         //then
         then(singlePrimitiveParametersDTO)
@@ -38,7 +38,7 @@ class SinglePrimitiveParametersScraperTest extends ScraperTest {
     @Test
     void shouldScrapNullWhenTheXPathIsWrong() {
         //when
-        SinglePrimitiveParametersDTO singlePrimitiveParametersDTO = scraper.scrapSingleObject(document, SinglePrimitiveParametersDTO.class);
+        SinglePrimitiveParametersDTO singlePrimitiveParametersDTO = scraper.scrapObject(document, SinglePrimitiveParametersDTO.class);
 
         //then
         then(singlePrimitiveParametersDTO)

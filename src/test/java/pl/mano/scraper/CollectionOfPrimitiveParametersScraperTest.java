@@ -2,7 +2,6 @@ package pl.mano.scraper;
 
 import org.junit.jupiter.api.Test;
 import pl.mano.scraper.model.CollectionOfPrimitiveParametersDTO;
-import pl.mano.scraper.model.SinglePrimitiveParametersDTO;
 
 import static org.assertj.core.api.BDDAssertions.then;
 
@@ -15,7 +14,7 @@ class CollectionOfPrimitiveParametersScraperTest extends ScraperTest {
     @Test
     void shouldScrapCollectionOfStringValues() {
         //when
-        CollectionOfPrimitiveParametersDTO collectionOfPrimitiveParametersDTO = scraper.scrapSingleObject(document, CollectionOfPrimitiveParametersDTO.class);
+        CollectionOfPrimitiveParametersDTO collectionOfPrimitiveParametersDTO = scraper.scrapObject(document, CollectionOfPrimitiveParametersDTO.class);
 
         //then
         then(collectionOfPrimitiveParametersDTO)
@@ -30,7 +29,7 @@ class CollectionOfPrimitiveParametersScraperTest extends ScraperTest {
     @Test
     void shouldScrapCollectionOfIntegerValues() {
         //when
-        CollectionOfPrimitiveParametersDTO collectionOfPrimitiveParametersDTO = scraper.scrapSingleObject(document, CollectionOfPrimitiveParametersDTO.class);
+        CollectionOfPrimitiveParametersDTO collectionOfPrimitiveParametersDTO = scraper.scrapObject(document, CollectionOfPrimitiveParametersDTO.class);
 
         //then
         then(collectionOfPrimitiveParametersDTO)
