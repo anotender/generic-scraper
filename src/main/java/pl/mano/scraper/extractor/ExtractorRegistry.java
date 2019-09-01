@@ -1,5 +1,8 @@
 package pl.mano.scraper.extractor;
 
+import pl.mano.scraper.extractor.parser.IntegerParser;
+import pl.mano.scraper.extractor.parser.Parser;
+
 import java.util.Optional;
 
 public class ExtractorRegistry {
@@ -17,10 +20,11 @@ public class ExtractorRegistry {
     }
 
     private ExtractorRegistry() {
+        Parser<Integer> integerParser = new IntegerParser();
         this.stringExtractor = new StringExtractor();
-        this.integerExtractor = new IntegerExtractor(this.stringExtractor);
+        this.integerExtractor = new IntegerExtractor(this.stringExtractor, integerParser);
         this.stringListExtractor = new StringListExtractor();
-        this.integerListExtractor = new IntegerListExtractor(this.stringListExtractor);
+        this.integerListExtractor = new IntegerListExtractor(this.stringListExtractor, integerParser);
     }
 
     public Optional<Extractor<?>> getNonCollectionExtractorForClass(Class<?> clazz) {

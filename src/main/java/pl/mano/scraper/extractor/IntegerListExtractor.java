@@ -1,10 +1,8 @@
 package pl.mano.scraper.extractor;
 
 import org.htmlcleaner.TagNode;
-import org.htmlcleaner.XPatherException;
+import pl.mano.scraper.extractor.parser.Parser;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,8 +10,11 @@ class IntegerListExtractor implements Extractor<List<Integer>> {
 
     private final Extractor<List<String>> stringListExtractor;
 
-    IntegerListExtractor(Extractor<List<String>> stringListExtractor) {
+    private final Parser<Integer> integerParser;
+
+    IntegerListExtractor(Extractor<List<String>> stringListExtractor, Parser<Integer> integerParser) {
         this.stringListExtractor = stringListExtractor;
+        this.integerParser = integerParser;
     }
 
     @Override
@@ -21,7 +22,7 @@ class IntegerListExtractor implements Extractor<List<Integer>> {
         return stringListExtractor
                 .apply(tagNode, xPath)
                 .stream()
-                .map(Integer::parseInt)
+                .map(integerParser)
                 .collect(Collectors.toList());
     }
 
