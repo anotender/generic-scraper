@@ -23,74 +23,50 @@ public class Scraper {
     private final ExtractorRegistry extractorRegistry = ExtractorRegistry.instance();
 
     public <T> T scrapObject(String document, Class<T> clazz) {
-        try {
-            TagNode rootNode = htmlCleaner.clean(document);
-            String rootXPath = clazz.getAnnotation(Scraped.class).baseXPath();
-            return scrapObject(rootNode, rootXPath, clazz);
-        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+        TagNode rootNode = htmlCleaner.clean(document);
+        String rootXPath = clazz.getAnnotation(Scraped.class).baseXPath();
+        return scrapObject(rootNode, rootXPath, clazz);
     }
 
     public <T> List<T> scrapObjects(String document, Class<T> clazz) {
+        TagNode rootNode = htmlCleaner.clean(document);
+        String rootXPath = clazz.getAnnotation(Scraped.class).baseXPath();
+        return scrapObjects(rootNode, rootXPath, clazz);
+    }
+
+    private <T> T scrapObject(TagNode rootNode, String rootXPath, Class<T> clazz) {
         try {
-            TagNode rootNode = htmlCleaner.clean(document);
-            String rootXPath = clazz.getAnnotation(Scraped.class).baseXPath();
-            return scrapObjects(rootNode, rootXPath, clazz);
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            throw new RuntimeException(e);
+            T instance = clazz.getDeclaredConstructor().newInstance();
+            Arrays.stream(clazz.getDeclaredFields())
+                    .filter(field -> field.isAnnotationPresent(XPath.class))
+                    .forEach(field -> {
+                        String xPath = rootXPath + field.getAnnotation(XPath.class).value();
+                        Extractor<?> extractor;
+                        if (field.getType().equals(List.class)) {
+                            ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
+                            Class<?> listClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                            extractor = extractorRegistry
+                                    .getCollectionExtractorForClass(listClass)
+                                    .orElseGet(() -> (tagNode, x) -> scrapObjects(tagNode, x, listClass));
+                        } else {
+                            extractor = extractorRegistry
+                                    .getNonCollectionExtractorForClass(field.getType())
+                                    .orElseGet(() -> (tagNode, x) -> scrapObject(tagNode, x, field.getType()));
+                        }
+                        setProperty(instance, field.getName(), extractor.apply(rootNode, xPath));
+                    });
+            return instance;
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    private <T> T scrapObject(TagNode rootNode, String rootXPath, Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        T instance = clazz.getDeclaredConstructor().newInstance();
-        Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(XPath.class))
-                .forEach(field -> {
-                    String xPath = rootXPath + field.getAnnotation(XPath.class).value();
-                    Extractor<?> extractor;
-                    if (field.getType().equals(List.class)) {
-                        ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
-                        Class<?> listClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-                        extractor = extractorRegistry
-                                .getCollectionExtractorForClass(listClass)
-                                .orElseGet(() -> (tagNode, x) -> {
-                                    try {
-                                        return scrapObjects(tagNode, x, listClass);
-                                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                                        e.printStackTrace();
-                                        return Collections.emptyList();
-                                    }
-                                });
-                    } else {
-                        extractor = extractorRegistry
-                                .getNonCollectionExtractorForClass(field.getType())
-                                .orElseGet(() -> (tagNode, x) -> {
-                                    try {
-                                        return scrapObject(tagNode, x, field.getType());
-                                    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                                        e.printStackTrace();
-                                        return null;
-                                    }
-                                });
-                    }
-                    setProperty(instance, field.getName(), extractor.apply(rootNode, xPath));
-                });
-        return instance;
-    }
-
-    private <T> List<T> scrapObjects(TagNode rootNode, String rootXPath, Class<T> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+    private <T> List<T> scrapObjects(TagNode rootNode, String rootXPath, Class<T> clazz) {
         try {
             return Arrays.stream(rootNode.evaluateXPath(rootXPath))
                     .map(TagNode.class::cast)
-                    .map(node -> {
-                        try {
-                            return scrapObject(node, "", clazz);
-                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
-                            e.printStackTrace();
-                            return null;
-                        }
-                    })
+                    .map(node -> scrapObject(node, "", clazz))
                     .collect(Collectors.toList());
         } catch (XPatherException e) {
             e.printStackTrace();
