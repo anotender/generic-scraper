@@ -10,12 +10,9 @@ import java.util.stream.Collectors;
 
 class CollectionExtractor implements Extractor<List<?>> {
 
-    private final Class<?> clazz;
-
     private final Extractor<?> nonCollectionExtractor;
 
-    CollectionExtractor(Class<?> clazz, Extractor<?> nonCollectionExtractor) {
-        this.clazz = clazz;
+    CollectionExtractor(Extractor<?> nonCollectionExtractor) {
         this.nonCollectionExtractor = nonCollectionExtractor;
     }
 

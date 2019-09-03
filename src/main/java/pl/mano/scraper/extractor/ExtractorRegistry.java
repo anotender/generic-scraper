@@ -50,7 +50,7 @@ public class ExtractorRegistry {
     }
 
     private Extractor<List<?>> getDefaultCollectionExtractorForClass(Class<?> clazz) {
-        return new CollectionExtractor(clazz, getDefaultNonCollectionExtractorForClass(clazz));
+        return new CollectionExtractor(getDefaultNonCollectionExtractorForClass(clazz));
     }
 
 }
