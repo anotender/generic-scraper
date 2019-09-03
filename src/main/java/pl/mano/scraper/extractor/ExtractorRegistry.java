@@ -3,7 +3,7 @@ package pl.mano.scraper.extractor;
 import pl.mano.scraper.extractor.parser.IntegerParser;
 import pl.mano.scraper.extractor.parser.Parser;
 
-import java.util.Optional;
+import java.util.List;
 
 public class ExtractorRegistry {
 
@@ -27,22 +27,30 @@ public class ExtractorRegistry {
         this.integerListExtractor = new IntegerListExtractor(this.stringListExtractor, integerParser);
     }
 
-    public Optional<Extractor<?>> getNonCollectionExtractorForClass(Class<?> clazz) {
+    public Extractor<?> getNonCollectionExtractorForClass(Class<?> clazz) {
         if (clazz.equals(String.class)) {
-            return Optional.of(stringExtractor);
+            return stringExtractor;
         } else if (clazz.equals(Integer.class)) {
-            return Optional.of(integerExtractor);
+            return integerExtractor;
         }
-        return Optional.empty();
+        return getDefaultNonCollectionExtractorForClass(clazz);
     }
 
-    public Optional<Extractor<?>> getCollectionExtractorForClass(Class<?> clazz) {
+    public Extractor<?> getCollectionExtractorForClass(Class<?> clazz) {
         if (clazz.equals(String.class)) {
-            return Optional.of(stringListExtractor);
+            return stringListExtractor;
         } else if (clazz.equals(Integer.class)) {
-            return Optional.of(integerListExtractor);
+            return integerListExtractor;
         }
-        return Optional.empty();
+        return getDefaultCollectionExtractorForClass(clazz);
+    }
+
+    private Extractor<?> getDefaultNonCollectionExtractorForClass(Class<?> clazz) {
+        return new NonCollectionExtractor(clazz, this);
+    }
+
+    private Extractor<List<?>> getDefaultCollectionExtractorForClass(Class<?> clazz) {
+        return new CollectionExtractor(clazz, getDefaultNonCollectionExtractorForClass(clazz));
     }
 
 }
