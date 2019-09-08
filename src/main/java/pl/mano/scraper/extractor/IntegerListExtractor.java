@@ -8,21 +8,21 @@ import java.util.stream.Collectors;
 
 class IntegerListExtractor implements Extractor<List<Integer>> {
 
-    private final Extractor<List<String>> stringListExtractor;
+    private final Extractor<List<Long>> longListExtractor;
 
-    private final Parser<Integer> integerParser;
+    private final Parser<Long, Integer> longToIntegerParser;
 
-    IntegerListExtractor(Extractor<List<String>> stringListExtractor, Parser<Integer> integerParser) {
-        this.stringListExtractor = stringListExtractor;
-        this.integerParser = integerParser;
+    IntegerListExtractor(Extractor<List<Long>> longListExtractor, Parser<Long, Integer> longToIntegerParser) {
+        this.longListExtractor = longListExtractor;
+        this.longToIntegerParser = longToIntegerParser;
     }
 
     @Override
     public List<Integer> apply(TagNode tagNode, String xPath) {
-        return stringListExtractor
+        return longListExtractor
                 .apply(tagNode, xPath)
                 .stream()
-                .map(integerParser)
+                .map(longToIntegerParser)
                 .collect(Collectors.toList());
     }
 

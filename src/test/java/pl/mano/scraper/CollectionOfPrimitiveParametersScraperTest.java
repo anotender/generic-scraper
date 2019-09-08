@@ -40,4 +40,19 @@ class CollectionOfPrimitiveParametersScraperTest extends ScraperTest {
                 .isNotEmpty()
                 .containsExactly(1, 2, 3, 4);
     }
+
+    @Test
+    void shouldScrapCollectionOfLongValues() {
+        //when
+        CollectionOfPrimitiveParametersDTO collectionOfPrimitiveParametersDTO = scraper.scrapObject(document, CollectionOfPrimitiveParametersDTO.class);
+
+        //then
+        then(collectionOfPrimitiveParametersDTO)
+                .isNotNull()
+                .extracting(CollectionOfPrimitiveParametersDTO::getCollectionOfLongValues)
+                .isNotNull()
+                .asList()
+                .isNotEmpty()
+                .containsExactly(1L, 2L, 3L, 4L);
+    }
 }

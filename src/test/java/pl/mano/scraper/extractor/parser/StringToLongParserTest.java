@@ -9,9 +9,9 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class LongParserTest {
+class StringToLongParserTest {
 
-    private final LongParser longParser = new LongParser();
+    private final StringToLongParser stringToLongParser = new StringToLongParser();
 
     static Stream<Arguments> testCases() {
         return Stream.of(
@@ -38,7 +38,7 @@ class LongParserTest {
     @MethodSource("testCases")
     void shouldParseStringValueToInteger(String valueAsString, Long expectedOutput) {
         //when
-        Long result = longParser.apply(valueAsString);
+        Long result = stringToLongParser.apply(valueAsString);
 
         //then
         then(result).isEqualTo(expectedOutput);

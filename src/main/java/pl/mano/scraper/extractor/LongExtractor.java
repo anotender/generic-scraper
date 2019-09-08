@@ -7,16 +7,16 @@ class LongExtractor implements Extractor<Long> {
 
     private final Extractor<String> stringExtractor;
 
-    private final Parser<Long> longParser;
+    private final Parser<String, Long> stringToLongParser;
 
-    LongExtractor(Extractor<String> stringExtractor, Parser<Long> longParser) {
+    LongExtractor(Extractor<String> stringExtractor, Parser<String, Long> stringToLongParser) {
         this.stringExtractor = stringExtractor;
-        this.longParser = longParser;
+        this.stringToLongParser = stringToLongParser;
     }
 
     @Override
     public Long apply(TagNode tagNode, String xPath) {
-        return stringExtractor.andThen(longParser).apply(tagNode, xPath);
+        return stringExtractor.andThen(stringToLongParser).apply(tagNode, xPath);
     }
 
 }

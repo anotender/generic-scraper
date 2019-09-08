@@ -1,32 +1,17 @@
-package pl.mano.scraper.extractor;
+package pl.mano.scraper.extractor.parser;
 
-import org.htmlcleaner.TagNode;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.mockito.BDDMockito.given;
 
-class IntegerExtractorTest {
+class LongToIntegerParserTest {
 
-    @InjectMocks
-    private IntegerExtractor integerExtractor;
-
-    @Mock
-    private LongExtractor longExtractor;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
+    private final LongToIntegerParser longToIntegerParser = new LongToIntegerParser();
 
     static Stream<Arguments> testCases() {
         return Stream.of(
@@ -43,14 +28,9 @@ class IntegerExtractorTest {
 
     @ParameterizedTest(name = "{0} should be {1}")
     @MethodSource("testCases")
-    void shouldParseIntegerFromLongValue(Long longValue, Integer expectedValue) {
-        //given
-        TagNode anyTagNode = new TagNode("AnyTagNode");
-        String anyXPath = "any/x/path";
-        given(longExtractor.apply(anyTagNode, anyXPath)).willReturn(longValue);
-
+    void shouldParseLongValueToIntegerValue(Long longValue, Integer expectedValue) {
         //when
-        Integer result = integerExtractor.apply(anyTagNode, anyXPath);
+        Integer result = longToIntegerParser.apply(longValue);
 
         //then
         then(result).isEqualTo(expectedValue);

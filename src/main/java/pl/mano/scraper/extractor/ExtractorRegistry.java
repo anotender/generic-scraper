@@ -1,8 +1,8 @@
 package pl.mano.scraper.extractor;
 
-import pl.mano.scraper.extractor.parser.IntegerParser;
-import pl.mano.scraper.extractor.parser.LongParser;
+import pl.mano.scraper.extractor.parser.LongToIntegerParser;
 import pl.mano.scraper.extractor.parser.Parser;
+import pl.mano.scraper.extractor.parser.StringToLongParser;
 
 import java.util.List;
 import java.util.Map;
@@ -31,10 +31,11 @@ public class ExtractorRegistry {
     }
 
     private Map<Class<?>, Extractor<?>> initNonCollectionExtractors() {
-        Parser<Long> longParser = new LongParser();
+        Parser<String, Long> stringToLongParser = new StringToLongParser();
+        Parser<Long, Integer> longToIntegerParser = new LongToIntegerParser();
         StringExtractor stringExtractor = new StringExtractor();
-        LongExtractor longExtractor = new LongExtractor(stringExtractor, longParser);
-        IntegerExtractor integerExtractor = new IntegerExtractor(longExtractor);
+        LongExtractor longExtractor = new LongExtractor(stringExtractor, stringToLongParser);
+        IntegerExtractor integerExtractor = new IntegerExtractor(longExtractor, longToIntegerParser);
         return Map.of(
                 String.class, stringExtractor,
                 Integer.class, integerExtractor,
@@ -43,12 +44,15 @@ public class ExtractorRegistry {
     }
 
     private Map<Class<?>, Extractor<?>> initCollectionExtractors() {
-        Parser<Integer> integerParser = new IntegerParser();
+        Parser<String, Long> stringToLongParser = new StringToLongParser();
+        Parser<Long, Integer> longToIntegerParser = new LongToIntegerParser();
         StringListExtractor stringListExtractor = new StringListExtractor();
-        IntegerListExtractor integerListExtractor = new IntegerListExtractor(stringListExtractor, integerParser);
+        LongListExtractor longListExtractor = new LongListExtractor(stringListExtractor, stringToLongParser);
+        IntegerListExtractor integerListExtractor = new IntegerListExtractor(longListExtractor, longToIntegerParser);
         return Map.of(
                 String.class, stringListExtractor,
-                Integer.class, integerListExtractor
+                Integer.class, integerListExtractor,
+                Long.class, longListExtractor
         );
     }
 

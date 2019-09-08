@@ -20,6 +20,9 @@ public class CollectionOfPrimitiveParametersDTO {
     @XPath("/div[@id=\"numbers\"]/p")
     private List<Integer> collectionOfIntegerValues;
 
+    @XPath("/div[@id=\"numbers\"]/p")
+    private List<Long> collectionOfLongValues;
+
     @XPath("/div[@id=\"paragraphs\"]/wrong")
     private List<String> emptyCollectionForWrongXpath;
 

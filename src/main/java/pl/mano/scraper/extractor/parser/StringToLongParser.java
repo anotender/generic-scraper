@@ -1,9 +1,9 @@
 package pl.mano.scraper.extractor.parser;
 
-public class IntegerParser implements Parser<Integer> {
+public class StringToLongParser implements Parser<String, Long> {
 
     @Override
-    public Integer apply(String stringValue) {
+    public Long apply(String stringValue) {
         if (stringValue == null) {
             return null;
         }
@@ -15,9 +15,9 @@ public class IntegerParser implements Parser<Integer> {
         return parseStringValue(stringValue);
     }
 
-    private Integer parseStringValue(String stringValue) {
+    private Long parseStringValue(String stringValue) {
         try {
-            return Integer.parseInt(stringValue);
+            return Long.parseLong(stringValue);
         } catch (NumberFormatException e) {
             return null;
         }

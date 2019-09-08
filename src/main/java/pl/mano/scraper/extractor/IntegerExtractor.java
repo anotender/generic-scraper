@@ -1,30 +1,22 @@
 package pl.mano.scraper.extractor;
 
 import org.htmlcleaner.TagNode;
+import pl.mano.scraper.extractor.parser.Parser;
 
 class IntegerExtractor implements Extractor<Integer> {
 
     private final Extractor<Long> longExtractor;
 
-    IntegerExtractor(Extractor<Long> longExtractor) {
+    private final Parser<Long, Integer> longToIntegerParser;
+
+    IntegerExtractor(Extractor<Long> longExtractor, Parser<Long, Integer> longToIntegerParser) {
         this.longExtractor = longExtractor;
+        this.longToIntegerParser = longToIntegerParser;
     }
 
     @Override
     public Integer apply(TagNode tagNode, String xPath) {
-        Long longValue = longExtractor.apply(tagNode, xPath);
-        if (longValue == null) {
-            return null;
-        }
-        return castLongToInteger(longValue);
-    }
-
-    private Integer castLongToInteger(Long longValue) {
-        try {
-            return Math.toIntExact(longValue);
-        } catch (ArithmeticException e) {
-            return null;
-        }
+        return longExtractor.andThen(longToIntegerParser).apply(tagNode, xPath);
     }
 
 }
