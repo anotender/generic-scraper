@@ -4,45 +4,49 @@ import pl.mano.scraper.extractor.parser.IntegerParser;
 import pl.mano.scraper.extractor.parser.Parser;
 
 import java.util.List;
+import java.util.Map;
 
 public class ExtractorRegistry {
 
-    private final StringExtractor stringExtractor;
+    private final Map<Class<?>, Extractor<?>> nonCollectionExtractors;
 
-    private final IntegerExtractor integerExtractor;
-
-    private final StringListExtractor stringListExtractor;
-
-    private final IntegerListExtractor integerListExtractor;
+    private final Map<Class<?>, Extractor<?>> collectionExtractors;
 
     public static ExtractorRegistry instance() {
         return new ExtractorRegistry();
     }
 
     private ExtractorRegistry() {
-        Parser<Integer> integerParser = new IntegerParser();
-        this.stringExtractor = new StringExtractor();
-        this.integerExtractor = new IntegerExtractor(this.stringExtractor, integerParser);
-        this.stringListExtractor = new StringListExtractor();
-        this.integerListExtractor = new IntegerListExtractor(this.stringListExtractor, integerParser);
+        this.nonCollectionExtractors = initNonCollectionExtractors();
+        this.collectionExtractors = initCollectionExtractors();
     }
 
     public Extractor<?> getNonCollectionExtractorForClass(Class<?> clazz) {
-        if (clazz.equals(String.class)) {
-            return stringExtractor;
-        } else if (clazz.equals(Integer.class)) {
-            return integerExtractor;
-        }
-        return getDefaultNonCollectionExtractorForClass(clazz);
+        return nonCollectionExtractors.getOrDefault(clazz, getDefaultNonCollectionExtractorForClass(clazz));
     }
 
     public Extractor<?> getCollectionExtractorForClass(Class<?> clazz) {
-        if (clazz.equals(String.class)) {
-            return stringListExtractor;
-        } else if (clazz.equals(Integer.class)) {
-            return integerListExtractor;
-        }
-        return getDefaultCollectionExtractorForClass(clazz);
+        return collectionExtractors.getOrDefault(clazz, getDefaultCollectionExtractorForClass(clazz));
+    }
+
+    private Map<Class<?>, Extractor<?>> initNonCollectionExtractors() {
+        Parser<Integer> integerParser = new IntegerParser();
+        StringExtractor stringExtractor = new StringExtractor();
+        IntegerExtractor integerExtractor = new IntegerExtractor(stringExtractor, integerParser);
+        return Map.of(
+                String.class, stringExtractor,
+                Integer.class, integerExtractor
+        );
+    }
+
+    private Map<Class<?>, Extractor<?>> initCollectionExtractors() {
+        Parser<Integer> integerParser = new IntegerParser();
+        StringListExtractor stringListExtractor = new StringListExtractor();
+        IntegerListExtractor integerListExtractor = new IntegerListExtractor(stringListExtractor, integerParser);
+        return Map.of(
+                String.class, stringListExtractor,
+                Integer.class, integerListExtractor
+        );
     }
 
     private Extractor<?> getDefaultNonCollectionExtractorForClass(Class<?> clazz) {
