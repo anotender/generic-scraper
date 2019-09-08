@@ -2,6 +2,8 @@ package pl.mano.scraper.extractor;
 
 import org.htmlcleaner.HtmlCleaner;
 import org.htmlcleaner.TagNode;
+import org.htmlcleaner.XPatherException;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -10,6 +12,8 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 class StringExtractorTest {
 
@@ -47,5 +51,19 @@ class StringExtractorTest {
 
         //then
         then(result).isEqualTo(expectedOutput);
+    }
+
+    @Test
+    void shouldReturnNullWhenTheXPatherExceptionIsThrown() throws XPatherException {
+        //given
+        TagNode tagNode = mock(TagNode.class);
+        String anyXPath = "any/x/path";
+        given(tagNode.evaluateXPath(anyXPath)).willThrow(XPatherException.class);
+
+        //when
+        String result = stringExtractor.apply(tagNode, anyXPath);
+
+        //then
+        then(result).isNull();
     }
 }
