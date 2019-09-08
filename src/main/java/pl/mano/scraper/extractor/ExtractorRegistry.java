@@ -33,9 +33,9 @@ public class ExtractorRegistry {
     private Map<Class<?>, Extractor<?>> initNonCollectionExtractors() {
         Parser<String, Long> stringToLongParser = new StringToLongParser();
         Parser<Long, Integer> longToIntegerParser = new LongToIntegerParser();
-        StringExtractor stringExtractor = new StringExtractor();
-        LongExtractor longExtractor = new LongExtractor(stringExtractor, stringToLongParser);
-        IntegerExtractor integerExtractor = new IntegerExtractor(longExtractor, longToIntegerParser);
+        Extractor<String> stringExtractor = new StringExtractor();
+        Extractor<Long> longExtractor = stringExtractor.andThen(stringToLongParser);
+        Extractor<Integer> integerExtractor = longExtractor.andThen(longToIntegerParser);
         return Map.of(
                 String.class, stringExtractor,
                 Integer.class, integerExtractor,
@@ -46,9 +46,9 @@ public class ExtractorRegistry {
     private Map<Class<?>, Extractor<?>> initCollectionExtractors() {
         Parser<String, Long> stringToLongParser = new StringToLongParser();
         Parser<Long, Integer> longToIntegerParser = new LongToIntegerParser();
-        StringListExtractor stringListExtractor = new StringListExtractor();
-        LongListExtractor longListExtractor = new LongListExtractor(stringListExtractor, stringToLongParser);
-        IntegerListExtractor integerListExtractor = new IntegerListExtractor(longListExtractor, longToIntegerParser);
+        Extractor<List<String>> stringListExtractor = new StringListExtractor();
+        Extractor<List<Long>> longListExtractor = new LongListExtractor(stringListExtractor, stringToLongParser);
+        Extractor<List<Integer>> integerListExtractor = new IntegerListExtractor(longListExtractor, longToIntegerParser);
         return Map.of(
                 String.class, stringListExtractor,
                 Integer.class, integerListExtractor,
