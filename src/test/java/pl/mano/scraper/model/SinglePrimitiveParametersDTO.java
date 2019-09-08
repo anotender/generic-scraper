@@ -18,6 +18,9 @@ public class SinglePrimitiveParametersDTO {
     @XPath("/div[@id=\"numbers\"]/p[1]")
     private Integer singleIntegerValue;
 
+    @XPath("/div[@id=\"numbers\"]/p[1]")
+    private Long singleLongValue;
+
     @XPath("/div/wrong")
     private String wrongXPathValue;
 

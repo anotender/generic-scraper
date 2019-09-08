@@ -1,6 +1,7 @@
 package pl.mano.scraper.extractor;
 
 import pl.mano.scraper.extractor.parser.IntegerParser;
+import pl.mano.scraper.extractor.parser.LongParser;
 import pl.mano.scraper.extractor.parser.Parser;
 
 import java.util.List;
@@ -30,12 +31,14 @@ public class ExtractorRegistry {
     }
 
     private Map<Class<?>, Extractor<?>> initNonCollectionExtractors() {
-        Parser<Integer> integerParser = new IntegerParser();
+        Parser<Long> longParser = new LongParser();
         StringExtractor stringExtractor = new StringExtractor();
-        IntegerExtractor integerExtractor = new IntegerExtractor(stringExtractor, integerParser);
+        LongExtractor longExtractor = new LongExtractor(stringExtractor, longParser);
+        IntegerExtractor integerExtractor = new IntegerExtractor(longExtractor);
         return Map.of(
                 String.class, stringExtractor,
-                Integer.class, integerExtractor
+                Integer.class, integerExtractor,
+                Long.class, longExtractor
         );
     }
 

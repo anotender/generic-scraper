@@ -14,7 +14,7 @@ public class SingleNestedDTO {
     private Integer firstValue;
 
     @XPath("/p[2]")
-    private Integer secondValue;
+    private Long secondValue;
 
     @XPath("/p[3]")
     private String thirdValue;

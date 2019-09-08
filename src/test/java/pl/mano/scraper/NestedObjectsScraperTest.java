@@ -37,7 +37,7 @@ public class NestedObjectsScraperTest extends ScraperTest {
                 .extracting(RootDTO::getSingleNestedDTO)
                 .isNotNull()
                 .extracting(SingleNestedDTO::getFirstValue, SingleNestedDTO::getSecondValue, SingleNestedDTO::getThirdValue)
-                .containsOnly(1, 2, "3");
+                .containsOnly(1, 2L, "3");
     }
 
     @Test

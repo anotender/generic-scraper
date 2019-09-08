@@ -36,6 +36,18 @@ class SinglePrimitiveParametersScraperTest extends ScraperTest {
     }
 
     @Test
+    void shouldScrapSingleLongValue() {
+        //when
+        SinglePrimitiveParametersDTO singlePrimitiveParametersDTO = scraper.scrapObject(document, SinglePrimitiveParametersDTO.class);
+
+        //then
+        then(singlePrimitiveParametersDTO)
+                .isNotNull()
+                .extracting(SinglePrimitiveParametersDTO::getSingleLongValue)
+                .isEqualTo(1L);
+    }
+
+    @Test
     void shouldScrapNullWhenTheXPathIsWrong() {
         //when
         SinglePrimitiveParametersDTO singlePrimitiveParametersDTO = scraper.scrapObject(document, SinglePrimitiveParametersDTO.class);
