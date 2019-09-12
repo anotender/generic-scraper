@@ -6,8 +6,9 @@ import pl.mano.scraper.model.nested.SingleNestedDTO;
 
 import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.BDDAssertions.then;
+import static pl.mano.scraper.utils.TestUtils.getResourceAsString;
 
-public class NestedObjectsScraperTest extends ScraperTest {
+class NestedObjectsScraperTest {
 
     private final String document = getResourceAsString("/test.html");
 

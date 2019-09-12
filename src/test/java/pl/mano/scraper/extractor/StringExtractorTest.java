@@ -14,26 +14,19 @@ import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
+import static pl.mano.scraper.utils.TestUtils.getResourceAsString;
 
 class StringExtractorTest {
 
-    private static final String TEST_DOCUMENT = "" +
-            "<html>" +
-            "   <body>" +
-            "       <div id=\"div1\">Value 1</div>" +
-            "       <div id=\"div2\">Value 2</div>" +
-            "       <div id=\"div3\">Value 3</div>" +
-            "       <div id=\"div4\">Value 4</div>" +
-            "   </body>" +
-            "</html>";
+    private final String document = getResourceAsString("/test.html");
 
     static Stream<Arguments> testCases() {
         return Stream.of(
                 arguments("/body/div", null),
-                arguments("/body/div[@id='div1']", "Value 1"),
-                arguments("//*[@id='div1']", "Value 1"),
-                arguments("//*[@id='div2']", "Value 2"),
-                arguments("//*[@id='div2']/text()", "Value 2"),
+                arguments("/body/div[@id='singleDivWithId']", "Value"),
+                arguments("//*[@href='href1']", "Href 1"),
+                arguments("//*[@href='href2']", "Href 2"),
+                arguments("//*[@href='href2']/text()", "Href 2"),
                 arguments("/no/match", null)
         );
     }
@@ -44,7 +37,7 @@ class StringExtractorTest {
     @MethodSource("testCases")
     void shouldEvaluateXPathToGivenExpectedOutput(String xPath, String expectedOutput) {
         //given
-        TagNode rootNode = new HtmlCleaner().clean(TEST_DOCUMENT);
+        TagNode rootNode = new HtmlCleaner().clean(document);
 
         //when
         String result = stringExtractor.apply(rootNode, xPath);

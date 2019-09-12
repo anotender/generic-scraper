@@ -7,8 +7,9 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.tuple;
 import static org.assertj.core.api.BDDAssertions.then;
+import static pl.mano.scraper.utils.TestUtils.getResourceAsString;
 
-class CollectionOfObjectsScraperTest extends ScraperTest {
+class CollectionOfObjectsScraperTest {
 
     private final String document = getResourceAsString("/test.html");
 

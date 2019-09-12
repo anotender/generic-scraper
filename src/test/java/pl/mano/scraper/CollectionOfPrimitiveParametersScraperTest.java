@@ -4,8 +4,9 @@ import org.junit.jupiter.api.Test;
 import pl.mano.scraper.model.CollectionOfPrimitiveParametersDTO;
 
 import static org.assertj.core.api.BDDAssertions.then;
+import static pl.mano.scraper.utils.TestUtils.getResourceAsString;
 
-class CollectionOfPrimitiveParametersScraperTest extends ScraperTest {
+class CollectionOfPrimitiveParametersScraperTest {
 
     private final String document = getResourceAsString("/test.html");
 
