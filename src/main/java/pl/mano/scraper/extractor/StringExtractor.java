@@ -2,6 +2,7 @@ package pl.mano.scraper.extractor;
 
 import org.htmlcleaner.TagNode;
 import org.htmlcleaner.XPatherException;
+import pl.mano.scraper.extractor.parser.Parser;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -9,6 +10,12 @@ import java.util.logging.Logger;
 class StringExtractor implements Extractor<String> {
 
     private static final Logger LOGGER = Logger.getLogger(StringExtractor.class.getName());
+
+    private final Parser<Object, String> objectToStringParser;
+
+    StringExtractor(Parser<Object, String> objectToStringParser) {
+        this.objectToStringParser = objectToStringParser;
+    }
 
     @Override
     public String apply(TagNode tagNode, String xPath) {
@@ -21,19 +28,11 @@ class StringExtractor implements Extractor<String> {
                 LOGGER.log(Level.WARNING, "No match for given XPath: " + xPath);
                 return null;
             }
-            Object result = results[0];
-            if (result instanceof TagNode) {
-                return extractTagNodeText((TagNode) result);
-            }
-            return result.toString();
+            return objectToStringParser.apply(results[0]);
         } catch (XPatherException e) {
             LOGGER.log(Level.WARNING, "Could not extract value for given XPath: " + xPath);
             return null;
         }
-    }
-
-    private String extractTagNodeText(TagNode node) {
-        return node.getText().toString();
     }
 
 }

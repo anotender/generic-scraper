@@ -1,6 +1,7 @@
 package pl.mano.scraper.extractor;
 
 import pl.mano.scraper.extractor.parser.LongToIntegerParser;
+import pl.mano.scraper.extractor.parser.ObjectToStringParser;
 import pl.mano.scraper.extractor.parser.Parser;
 import pl.mano.scraper.extractor.parser.StringToLongParser;
 
@@ -31,9 +32,10 @@ public class ExtractorRegistry {
     }
 
     private Map<Class<?>, Extractor<?>> initNonCollectionExtractors() {
+        Parser<Object, String> objectToStringParser = new ObjectToStringParser();
         Parser<String, Long> stringToLongParser = new StringToLongParser();
         Parser<Long, Integer> longToIntegerParser = new LongToIntegerParser();
-        Extractor<String> stringExtractor = new StringExtractor();
+        Extractor<String> stringExtractor = new StringExtractor(objectToStringParser);
         Extractor<Long> longExtractor = stringExtractor.andThen(stringToLongParser);
         Extractor<Integer> integerExtractor = longExtractor.andThen(longToIntegerParser);
         return Map.of(
@@ -44,9 +46,10 @@ public class ExtractorRegistry {
     }
 
     private Map<Class<?>, Extractor<?>> initCollectionExtractors() {
+        Parser<Object, String> objectToStringParser = new ObjectToStringParser();
         Parser<String, Long> stringToLongParser = new StringToLongParser();
         Parser<Long, Integer> longToIntegerParser = new LongToIntegerParser();
-        Extractor<List<String>> stringListExtractor = new StringListExtractor();
+        Extractor<List<String>> stringListExtractor = new StringListExtractor(objectToStringParser);
         Extractor<List<Long>> longListExtractor = new LongListExtractor(stringListExtractor, stringToLongParser);
         Extractor<List<Integer>> integerListExtractor = new IntegerListExtractor(longListExtractor, longToIntegerParser);
         return Map.of(
