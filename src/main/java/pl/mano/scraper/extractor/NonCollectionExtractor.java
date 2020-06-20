@@ -4,6 +4,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.htmlcleaner.TagNode;
 import pl.mano.annotation.XPath;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
@@ -28,21 +29,23 @@ class NonCollectionExtractor implements Extractor<Object> {
                     .filter(field -> field.isAnnotationPresent(XPath.class))
                     .forEach(field -> {
                         String xPath = rootXPath + field.getAnnotation(XPath.class).value();
-                        Extractor<?> extractor;
-                        if (field.getType().equals(List.class)) {
-                            ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
-                            Class<?> listClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
-                            extractor = extractorRegistry.getCollectionExtractorForClass(listClass);
-                        } else {
-                            extractor = extractorRegistry.getNonCollectionExtractorForClass(field.getType());
-                        }
-                        setProperty(instance, field.getName(), extractor.apply(rootNode, xPath));
+                        Object propertyValue = getExtractorBy(field).apply(rootNode, xPath);
+                        setProperty(instance, field.getName(), propertyValue);
                     });
             return instance;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private Extractor<?> getExtractorBy(Field field) {
+        if (field.getType().equals(List.class)) {
+            ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
+            Class<?> listClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+            return extractorRegistry.getCollectionExtractorForClass(listClass);
+        }
+        return extractorRegistry.getNonCollectionExtractorForClass(field.getType());
     }
 
     private void setProperty(Object o, String propertyName, Object propertyValue) {
