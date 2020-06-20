@@ -10,7 +10,7 @@
 
     <properties>
         <htmlcleaner.version>2.22</htmlcleaner.version>
-        <commons-beanutils.version>1.9.3</commons-beanutils.version>
+        <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <junit.version>5.5.1</junit.version>
         <assertj-core.version>3.13.2</assertj-core.version>
         <mockito.version>3.0.0</mockito.version>
