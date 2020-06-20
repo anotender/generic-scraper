@@ -1,6 +1,7 @@
 package pl.mano.scraper;
 
 import org.junit.jupiter.api.Test;
+import pl.mano.scraper.extractor.ExtractorRegistry;
 import pl.mano.scraper.model.CollectionOfObjectsDTO;
 
 import java.util.List;
@@ -13,7 +14,7 @@ class CollectionOfObjectsScraperTest {
 
     private final String document = getResourceAsString("/test.html");
 
-    private final Scraper scraper = new Scraper();
+    private final Scraper scraper = new Scraper(ExtractorRegistry.newInstance());
 
     @Test
     void shouldScrapCollectionOfObjects() {

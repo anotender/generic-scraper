@@ -1,6 +1,7 @@
 package pl.mano.scraper;
 
 import org.junit.jupiter.api.Test;
+import pl.mano.scraper.extractor.ExtractorRegistry;
 import pl.mano.scraper.model.CollectionOfPrimitiveParametersDTO;
 
 import static org.assertj.core.api.BDDAssertions.then;
@@ -10,7 +11,7 @@ class CollectionOfPrimitiveParametersScraperTest {
 
     private final String document = getResourceAsString("/test.html");
 
-    private final Scraper scraper = new Scraper();
+    private final Scraper scraper = new Scraper(ExtractorRegistry.newInstance());
 
     @Test
     void shouldScrapCollectionOfStringValues() {

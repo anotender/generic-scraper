@@ -5,6 +5,8 @@ import pl.mano.scraper.extractor.parser.ObjectToStringParser;
 import pl.mano.scraper.extractor.parser.Parser;
 import pl.mano.scraper.extractor.parser.StringToLongParser;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +16,19 @@ public class ExtractorRegistry {
 
     private final Map<Class<?>, Extractor<?>> collectionExtractors;
 
-    public static ExtractorRegistry instance() {
-        return new ExtractorRegistry();
+    private ExtractorRegistry(Map<Class<?>, Extractor<?>> customNonCollectionExtractors) {
+        var nonCollectionExtractors = new HashMap<>(initNonCollectionExtractors());
+        nonCollectionExtractors.putAll(customNonCollectionExtractors);
+        this.nonCollectionExtractors = Map.copyOf(nonCollectionExtractors);
+        this.collectionExtractors = initCollectionExtractors();
     }
 
-    private ExtractorRegistry() {
-        this.nonCollectionExtractors = initNonCollectionExtractors();
-        this.collectionExtractors = initCollectionExtractors();
+    public static ExtractorRegistry newInstance() {
+        return newInstance(Collections.emptyMap());
+    }
+
+    public static ExtractorRegistry newInstance(Map<Class<?>, Extractor<?>> customNonCollectionExtractors) {
+        return new ExtractorRegistry(customNonCollectionExtractors);
     }
 
     public Extractor<?> getNonCollectionExtractorForClass(Class<?> clazz) {
@@ -66,5 +74,4 @@ public class ExtractorRegistry {
     private Extractor<List<?>> getDefaultCollectionExtractorForClass(Class<?> clazz) {
         return new CollectionExtractor(getDefaultNonCollectionExtractorForClass(clazz));
     }
-
 }

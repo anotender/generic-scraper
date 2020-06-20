@@ -7,11 +7,16 @@ import pl.mano.scraper.extractor.ExtractorRegistry;
 
 import java.util.List;
 
-public class Scraper {
+public final class Scraper {
 
-    private final HtmlCleaner htmlCleaner = new HtmlCleaner();
+    private final HtmlCleaner htmlCleaner;
 
-    private final ExtractorRegistry extractorRegistry = ExtractorRegistry.instance();
+    private final ExtractorRegistry extractorRegistry;
+
+    public Scraper(ExtractorRegistry extractorRegistry) {
+        this.htmlCleaner = new HtmlCleaner();
+        this.extractorRegistry = extractorRegistry;
+    }
 
     public <T> T scrapObject(String document, Class<T> clazz) {
         TagNode rootNode = htmlCleaner.clean(document);
