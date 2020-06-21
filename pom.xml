@@ -17,7 +17,7 @@
         <mockito.version>3.3.3</mockito.version>
         <commons-io.version>2.7</commons-io.version>
         <lombok.version>1.18.12</lombok.version>
-        <java.version>11</java.version>
+        <java.version>14</java.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
