@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Function;
 
-public abstract class StringToNumberParser<N> implements Parser<String, N> {
+public final class StringToNumberParser<N> implements Parser<String, N> {
 
     private final Function<String, N> numberFromStringCreator;
 

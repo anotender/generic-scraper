@@ -1,6 +1,8 @@
 package pl.mano.scraper.extractor;
 
-import pl.mano.scraper.extractor.parser.*;
+import pl.mano.scraper.extractor.parser.ObjectToStringParser;
+import pl.mano.scraper.extractor.parser.Parser;
+import pl.mano.scraper.extractor.parser.StringToNumberParser;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -39,13 +41,13 @@ public class ExtractorRegistry {
 
     private Map<Class<?>, Extractor<?>> initNonCollectionExtractors() {
         Parser<Object, String> objectToStringParser = new ObjectToStringParser();
-        Parser<String, Long> stringToLongParser = new StringToLongParser();
-        Parser<String, BigDecimal> stringToBigDecimalParser = new StringToBigDecimalParser();
-        Parser<Long, Integer> longToIntegerParser = new LongToIntegerParser();
+        Parser<String, Long> stringToLongParser = new StringToNumberParser<>(Long::valueOf);
+        Parser<String, BigDecimal> stringToBigDecimalParser = new StringToNumberParser<>(BigDecimal::new);
+        Parser<String, Integer> stringToIntegerParser = new StringToNumberParser<>(Integer::valueOf);
         Extractor<String> stringExtractor = new StringExtractor(objectToStringParser);
         Extractor<Long> longExtractor = stringExtractor.andThen(stringToLongParser);
         Extractor<BigDecimal> bigDecimalExtractor = stringExtractor.andThen(stringToBigDecimalParser);
-        Extractor<Integer> integerExtractor = longExtractor.andThen(longToIntegerParser);
+        Extractor<Integer> integerExtractor = stringExtractor.andThen(stringToIntegerParser);
         return Map.of(
                 String.class, stringExtractor,
                 Integer.class, integerExtractor,
@@ -56,13 +58,13 @@ public class ExtractorRegistry {
 
     private Map<Class<?>, Extractor<?>> initCollectionExtractors() {
         Parser<Object, String> objectToStringParser = new ObjectToStringParser();
-        Parser<String, Long> stringToLongParser = new StringToLongParser();
-        Parser<String, BigDecimal> stringToBigDecimalParser = new StringToBigDecimalParser();
-        Parser<Long, Integer> longToIntegerParser = new LongToIntegerParser();
+        Parser<String, Long> stringToLongParser = new StringToNumberParser<>(Long::valueOf);
+        Parser<String, BigDecimal> stringToBigDecimalParser = new StringToNumberParser<>(BigDecimal::new);
+        Parser<String, Integer> stringToIntegerParser = new StringToNumberParser<>(Integer::valueOf);
         Extractor<List<String>> stringListExtractor = new StringListExtractor(objectToStringParser);
-        Extractor<List<Long>> longListExtractor = new LongListExtractor(stringListExtractor, stringToLongParser);
-        Extractor<List<BigDecimal>> bigDecimalListExtractor = new BigDecimalListExtractor(stringListExtractor, stringToBigDecimalParser);
-        Extractor<List<Integer>> integerListExtractor = new IntegerListExtractor(longListExtractor, longToIntegerParser);
+        Extractor<List<Long>> longListExtractor = new NumberListExtractor<>(stringListExtractor, stringToLongParser);
+        Extractor<List<BigDecimal>> bigDecimalListExtractor = new NumberListExtractor<>(stringListExtractor, stringToBigDecimalParser);
+        Extractor<List<Integer>> integerListExtractor = new NumberListExtractor<>(stringListExtractor, stringToIntegerParser);
         return Map.of(
                 String.class, stringListExtractor,
                 Integer.class, integerListExtractor,

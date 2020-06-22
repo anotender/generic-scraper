@@ -12,7 +12,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class StringToBigDecimalParserTest {
 
-    private final StringToBigDecimalParser stringToBigDecimalParser = new StringToBigDecimalParser();
+    private final Parser<String, BigDecimal> stringToBigDecimalParser = new StringToNumberParser<>(BigDecimal::new);
 
     static Stream<Arguments> testCases() {
         return Stream.of(

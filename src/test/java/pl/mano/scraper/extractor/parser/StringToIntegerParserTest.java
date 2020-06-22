@@ -9,28 +9,28 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class LongToIntegerParserTest {
+class StringToIntegerParserTest {
 
-    private final LongToIntegerParser longToIntegerParser = new LongToIntegerParser();
+    private final Parser<String, Integer> stringToIntegerParser = new StringToNumberParser<>(Integer::valueOf);
 
     static Stream<Arguments> testCases() {
         return Stream.of(
-                arguments(0L, 0),
-                arguments(1L, 1),
-                arguments(-1L, -1),
+                arguments("0", 0),
+                arguments("1", 1),
+                arguments("-1", -1),
                 arguments(null, null),
-                arguments(2_147_483_647L, Integer.MAX_VALUE),
-                arguments(2_147_483_648L, null),
-                arguments(-2_147_483_648L, Integer.MIN_VALUE),
-                arguments(-2_147_483_649L, null)
+                arguments("2 147 483 647", Integer.MAX_VALUE),
+                arguments("2 147 483 648", null),
+                arguments("-2 147 483 648", Integer.MIN_VALUE),
+                arguments("-2 147 483 649", null)
         );
     }
 
     @ParameterizedTest(name = "{0} should be {1}")
     @MethodSource("testCases")
-    void shouldParseLongValueToIntegerValue(Long longValue, Integer expectedValue) {
+    void shouldParseLongValueToIntegerValue(String stringValue, Integer expectedValue) {
         //when
-        Integer result = longToIntegerParser.apply(longValue);
+        Integer result = stringToIntegerParser.apply(stringValue);
 
         //then
         then(result).isEqualTo(expectedValue);

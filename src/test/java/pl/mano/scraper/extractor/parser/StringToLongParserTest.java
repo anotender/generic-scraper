@@ -11,7 +11,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class StringToLongParserTest {
 
-    private final StringToLongParser stringToLongParser = new StringToLongParser();
+    private final Parser<String, Long> stringToLongParser = new StringToNumberParser<>(Long::valueOf);
 
     static Stream<Arguments> testCases() {
         return Stream.of(
