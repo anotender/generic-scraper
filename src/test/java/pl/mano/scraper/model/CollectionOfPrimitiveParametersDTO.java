@@ -6,6 +6,7 @@ import lombok.Setter;
 import pl.mano.annotation.Scraped;
 import pl.mano.annotation.XPath;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Scraped(baseXPath = "/body")
@@ -16,6 +17,9 @@ public class CollectionOfPrimitiveParametersDTO {
 
     @XPath("/div[@id=\"paragraphs\"]/p")
     private List<String> collectionOfStringValues;
+
+    @XPath("/div[@id=\"paragraphs\"]/p")
+    private ArrayList<String> specificTypeCollectionOfStringValues;
 
     @XPath("/div[@id=\"numbers\"]/p")
     private List<Integer> collectionOfIntegerValues;

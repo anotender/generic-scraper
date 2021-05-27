@@ -40,7 +40,7 @@ class NonCollectionExtractor implements Extractor<Object> {
     }
 
     private Extractor<?> getExtractorBy(Field field) {
-        if (field.getType().equals(List.class)) {
+        if (List.class.isAssignableFrom(field.getType())) {
             ParameterizedType parameterizedType = (ParameterizedType) field.getGenericType();
             Class<?> listClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
             return extractorRegistry.getCollectionExtractorForClass(listClass);
