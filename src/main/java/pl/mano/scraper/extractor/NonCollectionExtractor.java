@@ -1,5 +1,7 @@
 package pl.mano.scraper.extractor;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.htmlcleaner.TagNode;
 import pl.mano.annotation.XPath;
@@ -10,20 +12,18 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 class NonCollectionExtractor implements Extractor<Object> {
 
     private final Class<?> clazz;
-
     private final ExtractorRegistry extractorRegistry;
 
-    NonCollectionExtractor(Class<?> clazz, ExtractorRegistry extractorRegistry) {
-        this.clazz = clazz;
-        this.extractorRegistry = extractorRegistry;
-    }
 
     @Override
     public Object apply(TagNode rootNode, String rootXPath) {
         try {
+            log.debug("Scraping root xPath [{}]", rootXPath);
             Object instance = clazz.getDeclaredConstructor().newInstance();
             Arrays.stream(clazz.getDeclaredFields())
                     .filter(field -> field.isAnnotationPresent(XPath.class))
@@ -34,7 +34,7 @@ class NonCollectionExtractor implements Extractor<Object> {
                     });
             return instance;
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
@@ -52,7 +52,7 @@ class NonCollectionExtractor implements Extractor<Object> {
         try {
             BeanUtils.setProperty(o, propertyName, propertyValue);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            log.warn(e.getMessage(), e);
         }
     }
 

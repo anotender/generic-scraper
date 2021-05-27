@@ -1,16 +1,16 @@
 package pl.mano.scraper.extractor.parser;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Function;
 
+@Slf4j
+@RequiredArgsConstructor
 public final class StringToNumberParser<N> implements Parser<String, N> {
 
     private final Function<String, N> numberFromStringCreator;
-
-    public StringToNumberParser(Function<String, N> numberFromStringCreator) {
-        this.numberFromStringCreator = numberFromStringCreator;
-    }
 
     @Override
     public N apply(String stringValue) {
@@ -24,6 +24,7 @@ public final class StringToNumberParser<N> implements Parser<String, N> {
         try {
             return numberFromStringCreator.apply(stringValue);
         } catch (NumberFormatException e) {
+            log.warn(e.getMessage(), e);
             return null;
         }
     }
