@@ -9,18 +9,19 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <htmlcleaner.version>2.24</htmlcleaner.version>
+        <htmlcleaner.version>2.25</htmlcleaner.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
-        <junit.version>5.7.2</junit.version>
-        <assertj-core.version>3.19.0</assertj-core.version>
-        <mockito.version>3.10.0</mockito.version>
-        <commons-io.version>2.9.0</commons-io.version>
-        <lombok.version>1.18.20</lombok.version>
-        <java.version>14</java.version>
+        <junit.version>5.8.1</junit.version>
+        <assertj-core.version>3.21.0</assertj-core.version>
+        <mockito.version>4.0.0</mockito.version>
+        <commons-io.version>2.11.0</commons-io.version>
+        <lombok.version>1.18.22</lombok.version>
+        <java.version>17</java.version>
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.5</jacoco-maven-plugin.version>
+        <slf4j-simple.version>1.7.32</slf4j-simple.version>
     </properties>
 
     <dependencies>
@@ -47,7 +48,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.30</version>
+            <version>${slf4j-simple.version}</version>
         </dependency>
 
         <dependency>
